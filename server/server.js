@@ -8,6 +8,7 @@ const sqlite3 = require("sqlite3").verbose();
 app.use(cors());
 
 const server = http.createServer(app);
+require('./initializeDB');
 
 const io = new Server(server, {
     cors: {
@@ -39,6 +40,38 @@ io.on("connection", (socket) => {
         }
     });
 
+    socket.on('code_change', (data) => {
+        // Update the database with the new code
+        db.run('UPDATE codeblocks SET code = ? WHERE id = ?', [data.code, data.id], (err) => {
+            if (err) {
+                console.error(err.message);
+            } 
+            else {
+                // Check if the updated code matches the solution
+                db.get('SELECT solution FROM codeblocks WHERE id = ?', [data.id], (err, row) => {
+                    if (err) {
+                        console.error(err.message);
+                    } 
+                    else {
+                        let solutionCode = row.solution.trim().replace(/\s+/g, ' ');
+                        let userCode = data.code.trim().replace(/\s+/g, ' ');
+
+                        if (userCode === solutionCode) {                        
+                            // Broadcast the code change to all connected clients along with a success indicator
+                            io.emit('receive_code', { code: data.code, id: data.id, success: true });
+                            console.log(`Code change broadcasted for code block ${data.id} (success)`);
+                        } else {
+                            // Broadcast the code change to all connected clients with a failure indicator
+                            io.emit('receive_code', { code: data.code, id: data.id, success: false });
+                            console.log(`Code change broadcasted for code block ${data.id}`);
+                            console.log({userCode});
+                            console.log({solutionCode});
+                        }
+                    }
+                });
+            }
+        });
+    });
 
     socket.on('code_change', (data) => {
         // Update the database with the new code
