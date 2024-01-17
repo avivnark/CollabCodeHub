@@ -3,6 +3,7 @@ const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
+const sqlite3 = require("sqlite3").verbose();
 
 app.use(cors());
 
@@ -17,10 +18,12 @@ const io = new Server(server, {
 
 let isMentor = {};
 
+// Connect to SQLite database
+const db = new sqlite3.Database('codeblocks.db');
+
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
-    // Emit the 'userConnected' event to the server
     socket.on('userConnected', () => {
         // Handle user connection logic if needed
     });
@@ -36,12 +39,39 @@ io.on("connection", (socket) => {
         }
     });
 
-    // Listen for 'code_change' event from the student
+
     socket.on('code_change', (data) => {
-        // Broadcast the code change mentor
-        io.emit('receive_code', { code: data.code, id: data.id });
-        console.log(`Code change broadcasted code block ${data.id}`);
+        // Update the database with the new code
+        db.run('UPDATE codeblocks SET code = ? WHERE id = ?', [data.code, data.id], (err) => {
+            if (err) {
+                console.error(err.message);
+            } else {
+                // Check if the updated code matches the solution
+                db.get('SELECT * FROM codeblocks WHERE id = ?', [data.id], (err, row) => {
+                    if (err) {
+                        console.error(err.message);
+                    } else {
+                        let solutionCode = row.solution;
+                        let userCode = data.code.trim().replace(/\s+/g, ' ');
+    
+                        if (userCode === solutionCode) {
+                            // Broadcast the code change to all connected clients along with a success indicator
+                            io.emit('receive_code', { code: data.code, id: data.id, success: true });
+                            console.log(`Code change broadcasted for code block ${data.id} (success)`);
+                        } else {
+                            // Broadcast the code change to all connected clients with a failure indicator
+                            io.emit('receive_code', { code: data.code, id: data.id, success: false });
+                            console.log(`Code change broadcasted for code block ${data.id} (failure)`);
+                            console.log({ userCode });
+                            console.log({ solutionCode });
+                        }
+                    }
+                });
+            }
+        });
     });
+    
+    
 
     socket.on('disconnect', () => {
         console.log(`User Disconnected: ${socket.id}`);
@@ -50,4 +80,15 @@ io.on("connection", (socket) => {
 
 server.listen(3001, () => {
     console.log("Server is Running on Port 3001");
+});
+
+// Close the database connection when the server is stopped
+process.on('SIGINT', () => {
+    db.close((err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log('Closed the database connection.');
+        process.exit(0);
+    });
 });
