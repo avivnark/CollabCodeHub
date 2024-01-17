@@ -95,3 +95,11 @@ a {
   margin-bottom: 20px;
   color: #abb2bf;
 }
+
+.code-block pre {
+  margin: 0;
+}
+
+.code-block code {
+  white-space: pre-wrap;
+}

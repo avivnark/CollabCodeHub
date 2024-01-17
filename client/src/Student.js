@@ -1,15 +1,17 @@
-import "./App.css";
 import React, { useState } from 'react';
 
 function Student({ socket, id }) {
     const [code, setCode] = useState('');
 
+    // Function to handle code changes and emit 'code_change' event to the server
     const handleCodeChange = (event) => {
         const newCode = event.target.value;
         setCode(newCode);
-        // Automatically send the code when it changes
+
+        // Emit 'code_change' event to the server
         socket.emit('code_change', { code: newCode, id: parseInt(id, 10) });
     };
+
     return (
         <textarea
             placeholder="Enter code here..."
@@ -21,6 +23,4 @@ function Student({ socket, id }) {
     );
 }
 
-
 export default Student;
-
