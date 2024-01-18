@@ -40,6 +40,8 @@ const codeBlocks = [
     },
 ];
 
+const httpServer = http.createServer();
+
 const io = new Server(httpServer, { cors: { origin: '*' } });
 
 
