@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
-import hljs from 'highlight.js';
-import 'highlight.js/styles/atom-one-dark.css';
+import React, { useEffect, useState } from 'react';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
 
 function Mentor({ socket, id }) {
-  const [codeReceived, setCodeReceived] = useState('Waiting for code');
-  const codeRef = useRef();
+  const [codeReceived, setCodeReceived] = useState('Waiting...');
 
   useEffect(() => {
     const handleCodeReceived = (data) => {
@@ -13,12 +13,6 @@ function Mentor({ socket, id }) {
 
       if (receivedId === expectedId) {
         setCodeReceived(data.code);
-
-        if (codeRef.current) {
-          hljs.highlightBlock(codeRef.current);
-        } else {
-          console.warn('codeRef.current is null or undefined');
-        }
       }
     };
 
@@ -29,12 +23,11 @@ function Mentor({ socket, id }) {
     };
   }, [socket, id]);
 
+
   return (
-    <pre>
-      <code ref={codeRef} className="language-javascript">
-        {codeReceived}
-      </code>
-    </pre>
+    <SyntaxHighlighter language="javascript" style={atomOneDark}>
+      {codeReceived}
+    </SyntaxHighlighter>
   );
 }
 
