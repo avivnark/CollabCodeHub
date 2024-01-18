@@ -125,7 +125,6 @@ io.on("connection", (socket) => {
                 io.emit('receive_code', { code: data.code, id: data.id, success: false });
                 console.log(`Code change broadcasted for code block ${data.id}`);
                 console.log({ userCode });
-                console.log({ solutionCode });
             }
         } catch (err) {
             console.error("Error updating MongoDB document:", err);

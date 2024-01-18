@@ -1,10 +1,8 @@
-// LobbyPage.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import codeBlocks from './codeBlocksData';
 
 const LobbyPage = () => {
-    console.log('LobbyPage component rendered');
     return (
         <div className="lobby-container">
             <h1>Choose code block</h1>
