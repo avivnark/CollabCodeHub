@@ -6,6 +6,7 @@ import './App.css';
 import Mentor from './Mentor';
 import Student from './Student';
 
+
 const socket = io.connect('http://localhost:3001');
 
 function CodeBlock() {
@@ -66,7 +67,7 @@ function CodeBlock() {
 
 
     return (
-        <div className="App">
+        <div className="CodeBlock">
             <h1>Code Block {selectedCodeBlock.name}</h1>
             <h2>{selectedCodeBlock.description}</h2>
             {connectionStatus === 'mentor connected' && (
