@@ -12,7 +12,7 @@ require('./initializeDB');
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "https://collab-code-2k62pvu1t-avivnarks-projects.vercel.app",
         methods: ["GET", "POST"],
     },
 });

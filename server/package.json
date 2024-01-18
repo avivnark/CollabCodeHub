@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo 'No build step for server'"
+    "start": "node your-server-file.js",
+    "build": "npm install && mkdir -p public && tar -czf public/server-build.tar.gz server.js initializeDB.js config/*"
   },
   "author": "Aviv Narkis",
   "license": "ISC",
