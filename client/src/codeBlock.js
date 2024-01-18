@@ -8,7 +8,6 @@ import Student from './Student';
 
 const socket = io.connect('http://localhost:3001');
 
-
 function CodeBlock() {
     const { id } = useParams();
     const selectedCodeBlock = codeBlocks.find((block) => block.id === parseInt(id, 10));

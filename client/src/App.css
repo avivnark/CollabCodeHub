@@ -2,7 +2,7 @@ body {
   font-family: 'Courier New', monospace;
   font-size: 16px;
   line-height: 1.5;
-  color: #c8c9cc; /* Light gray text */
+  color: #c8c9cc;
   background-color: #282c34; 
 }
 
@@ -20,6 +20,7 @@ a {
 .navbar h1 {
   color: #61afef; 
   font-weight: bold;
+  font-size: 24px;
 }
 
 .navbar a {
