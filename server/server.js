@@ -40,12 +40,8 @@ const codeBlocks = [
     },
 ];
 
-const io = new Server(server, {
-    cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
-    },
-});
+const io = new Server(httpServer, { cors: { origin: '*' } });
+
 
 let isMentor = {};
 
@@ -84,10 +80,8 @@ async function connectToMongoDB() {
 connectToMongoDB();
 
 io.on("connection", (socket) => {
-    console.log(`User Connected: ${socket.id}`);
-
     socket.on('userConnected', () => {
-        // Handle user connection logic if needed
+        console.log(`User Connected: ${socket.id}`);
     });
 
     socket.on('joinCodeBlock', (numOfBlock) => {
