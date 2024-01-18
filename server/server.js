@@ -3,24 +3,85 @@ const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
-const sqlite3 = require("sqlite3").verbose();
+const { MongoClient } = require('mongodb');
 
 app.use(cors());
 
 const server = http.createServer(app);
-require('./initializeDB');
+
+const codeBlocks = [
+    {
+        id: 1,
+        name: 'Variables and Data Types',
+        description: 'Declare a variable to store your age and print it to the console.',
+        code: '',
+        solution: 'const age = 25; console.log(age);',
+    },
+    {
+        id: 2,
+        name: 'Conditional Statements',
+        description: 'Write a program that checks if a given number is even or odd.',
+        code: '',
+        solution: 'const number = 10;if (number % 2 === 0) {  console.log("Even");} else {  console.log("Odd");}',
+    },
+    {
+        id: 3,
+        name: 'Functions',
+        description: 'Create a function that adds two numbers and returns the result.',
+        code: '',
+        solution: 'function addNumbers(a, b) {  return a + b;}const result = addNumbers(3, 4);console.log(result);',
+    },
+    {
+        id: 4,
+        name: 'Loops',
+        description: 'Use a loop to print the numbers from 1 to 5 to the console.',
+        code: '',
+        solution: '1',
+    },
+];
 
 const io = new Server(server, {
     cors: {
-        origin: "https://collab-code-2k62pvu1t-avivnarks-projects.vercel.app",
+        origin: "http://localhost:3000",
         methods: ["GET", "POST"],
     },
 });
 
 let isMentor = {};
 
-// Connect to SQLite database
-const db = new sqlite3.Database('codeblocks.db');
+// MongoDB connection URI
+const mongoURI = "mongodb+srv://avivn14:96UQIMIl23v5T0Tx@collabcodehub.ioxvtqd.mongodb.net/?retryWrites=true&w=majority";
+
+// Connect to MongoDB
+const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+let db;
+
+async function connectToMongoDB() {
+    try {
+        await client.connect();
+        db = client.db('collabcode');
+        console.log("Connected to MongoDB");
+
+        // Check if the 'codeblocks' collection exists
+        const collections = await db.collections();
+        const codeblocksCollection = collections.find(collection => collection.collectionName === 'codeblocks');
+
+        if (codeblocksCollection) {
+            // Drop the existing 'codeblocks' collection
+            await codeblocksCollection.drop();
+        }
+
+        // Insert the initial data into the 'codeblocks' collection
+        await db.collection('codeblocks').insertMany(codeBlocks);
+
+        console.log("Initialized 'codeblocks' collection with initial data");
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
+
+connectToMongoDB();
 
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
@@ -40,71 +101,36 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on('code_change', (data) => {
-        // Update the database with the new code
-        db.run('UPDATE codeblocks SET code = ? WHERE id = ?', [data.code, data.id], (err) => {
-            if (err) {
-                console.error(err.message);
-            } 
-            else {
-                // Check if the updated code matches the solution
-                db.get('SELECT solution FROM codeblocks WHERE id = ?', [data.id], (err, row) => {
-                    if (err) {
-                        console.error(err.message);
-                    } 
-                    else {
-                        let solutionCode = row.solution.trim().replace(/\s+/g, ' ');
-                        let userCode = data.code.trim().replace(/\s+/g, ' ');
+    socket.on('code_change', async (data) => {
+        try {
+            // Update the MongoDB document with the new code
+            await db.collection('codeblocks').updateOne(
+                { id: data.id },
+                { $set: { code: data.code } }
+            );
 
-                        if (userCode === solutionCode) {                        
-                            // Broadcast the code change to all connected clients along with a success indicator
-                            io.emit('receive_code', { code: data.code, id: data.id, success: true });
-                            console.log(`Code change broadcasted for code block ${data.id} (success)`);
-                        } else {
-                            // Broadcast the code change to all connected clients with a failure indicator
-                            io.emit('receive_code', { code: data.code, id: data.id, success: false });
-                            console.log(`Code change broadcasted for code block ${data.id}`);
-                            console.log({userCode});
-                            console.log({solutionCode});
-                        }
-                    }
-                });
-            }
-        });
-    });
+            // Retrieve the updated document
+            const updatedBlock = await db.collection('codeblocks').findOne({ id: data.id });
 
-    socket.on('code_change', (data) => {
-        // Update the database with the new code
-        db.run('UPDATE codeblocks SET code = ? WHERE id = ?', [data.code, data.id], (err) => {
-            if (err) {
-                console.error(err.message);
+            // Check if the updated code matches the solution
+            const solutionCode = updatedBlock.solution.trim().replace(/\s+/g, ' ');
+            const userCode = data.code.trim().replace(/\s+/g, ' ');
+
+            if (userCode === solutionCode) {
+                // Broadcast the code change to all connected clients along with a success indicator
+                io.emit('receive_code', { code: data.code, id: data.id, success: true });
+                console.log(`Code change broadcasted for code block ${data.id} (success)`);
             } else {
-                // Check if the updated code matches the solution
-                db.get('SELECT * FROM codeblocks WHERE id = ?', [data.id], (err, row) => {
-                    if (err) {
-                        console.error(err.message);
-                    } else {
-                        let solutionCode = row.solution;
-                        let userCode = data.code.trim().replace(/\s+/g, ' ');
-    
-                        if (userCode === solutionCode) {
-                            // Broadcast the code change to all connected clients along with a success indicator
-                            io.emit('receive_code', { code: data.code, id: data.id, success: true });
-                            console.log(`Code change broadcasted for code block ${data.id} (success)`);
-                        } else {
-                            // Broadcast the code change to all connected clients with a failure indicator
-                            io.emit('receive_code', { code: data.code, id: data.id, success: false });
-                            console.log(`Code change broadcasted for code block ${data.id} (failure)`);
-                            console.log({ userCode });
-                            console.log({ solutionCode });
-                        }
-                    }
-                });
+                // Broadcast the code change to all connected clients with a failure indicator
+                io.emit('receive_code', { code: data.code, id: data.id, success: false });
+                console.log(`Code change broadcasted for code block ${data.id}`);
+                console.log({ userCode });
+                console.log({ solutionCode });
             }
-        });
+        } catch (err) {
+            console.error("Error updating MongoDB document:", err);
+        }
     });
-    
-    
 
     socket.on('disconnect', () => {
         console.log(`User Disconnected: ${socket.id}`);
@@ -117,14 +143,14 @@ server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
-
-// Close the database connection when the server is stopped
-process.on('SIGINT', () => {
-    db.close((err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        console.log('Closed the database connection.');
+// Close the MongoDB connection when the server is stopped
+process.on('SIGINT', async () => {
+    try {
+        await client.close();
+        console.log('Closed the MongoDB connection.');
         process.exit(0);
-    });
+    } catch (err) {
+        console.error("Error closing MongoDB connection:", err);
+        process.exit(1);
+    }
 });

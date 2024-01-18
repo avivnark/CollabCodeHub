@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
 import LobbyPage from './LobbyPage';
 import CodeBlock from './codeBlock';
 import Navbar from './Navbar';
