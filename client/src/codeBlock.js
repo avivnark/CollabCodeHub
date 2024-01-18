@@ -6,7 +6,7 @@ import './App.css';
 import Mentor from './Mentor';
 import Student from './Student';
 
-const socket = io.connect('http://localhost:3001');
+const socket = io.connect('https://collab-code-hub-server-83yumdc3w-avivnarks-projects.vercel.app/');
 
 
 function CodeBlock() {

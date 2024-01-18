@@ -111,9 +111,12 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(3001, () => {
-    console.log("Server is Running on Port 3001");
+const port = process.env.PORT || 3001;
+
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
+
 
 // Close the database connection when the server is stopped
 process.on('SIGINT', () => {
