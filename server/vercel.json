@@ -1,23 +1,10 @@
+
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "server.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/server.js"
-      }
-    ],
+    "builds": [{ "src": "server.js", "use": "@vercel/node" }],
+    "routes": [{ "src": "/(.*)", "dest": "/server.js" }],
     "env": {
       "MONGODB_URI": "mongodb+srv://avivn14:96UQIMIl23v5T0Tx@collabcodehub.ioxvtqd.mongodb.net/?retryWrites=true&w=majority"
-
-
-
-
     }
   }
   
