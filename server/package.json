@@ -4,9 +4,9 @@
   "description": "server for collabcodehub",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node your-server-file.js",
-    "build": "npm install && mkdir -p public && tar -czf public/server-build.tar.gz server.js initializeDB.js config/*"
+    "build": "echo 'No build step for server'"
   },
   "author": "Aviv Narkis",
   "license": "ISC",
@@ -18,6 +18,7 @@
     "mongoose": "^8.1.0",
     "nodemon": "^3.0.2",
     "socket.io": "^4.7.4",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "vercel": "^33.1.0"
   }
 }

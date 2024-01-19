@@ -1,9 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
-import LobbyPage from './LobbyPage';
-import CodeBlock from './codeBlock';
-import Navbar from './Navbar';
+import LobbyPage from './components/LobbyPage';
+import CodeBlock from './components/codeBlock';
+import Navbar from './components/Navbar';
 
 
 
