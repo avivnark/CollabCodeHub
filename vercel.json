@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     { "src": "./server/server.js", "use": "@vercel/node" },
-    { "src": "./client/**", "use": "@vercel/static" }
+    { "src": "./client/**", "use": "@vercel/static", "config": {} }
   ],
   "routes": [
     {
@@ -13,7 +13,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "./client/$1",
+      "dest": "./client/index.html",
       "methods": ["GET", "OPTIONS"],
       "headers": {
         "Cache-Control": "public, max-age=0, must-revalidate",
