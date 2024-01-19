@@ -45,7 +45,7 @@ const codeBlocks = [
 let isMentor = {};
 
 // MongoDB connection URI
-const mongoURI = process.env.MONGODB_URI
+const mongoURI = "mongodb+srv://avivn14:96UQIMIl23v5T0Tx@collabcodehub.ioxvtqd.mongodb.net/?retryWrites=true&w=majority"
 
 // Connect to MongoDB
 const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
