@@ -1,11 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "server for collabcodehub",
+  "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "Aviv Narkis",
   "license": "ISC",
@@ -19,9 +19,5 @@
     "socket.io": "^4.7.4",
     "sqlite3": "^5.1.7",
     "vercel": "^33.1.0"
-  },
-  "engines": {
-    "node": "20.x"  
-  },
-  "start": "node server.js"  
+  }
 }
