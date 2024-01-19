@@ -21,7 +21,7 @@
     "vercel": "^33.1.0"
   },
   "engines": {
-    "node": "14.x"  
+    "node": "20.x"  
   },
   "start": "node server.js"  
 }
