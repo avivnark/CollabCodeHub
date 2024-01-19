@@ -8,6 +8,8 @@ const { MongoClient } = require('mongodb');
 app.use(cors());
 
 const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
+
 
 const codeBlocks = [
     {
@@ -39,11 +41,6 @@ const codeBlocks = [
         solution: '1',
     },
 ];
-
-const httpServer = http.createServer();
-
-const io = new Server(httpServer, { cors: { origin: '*' } });
-
 
 let isMentor = {};
 
