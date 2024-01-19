@@ -10,6 +10,9 @@ app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
+app.get('/', (req, res) => {
+    res.send('API is running'); // You can customize this response
+});
 
 const codeBlocks = [
     {
