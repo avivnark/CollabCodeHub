@@ -8,7 +8,13 @@ const { MongoClient } = require('mongodb');
 app.use(cors());
 
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: '*' } });
+const io = new Server(server, {
+  cors: {
+    origin: 'https://collabcodehub.vercel.app/',
+    methods: ['GET', 'POST']
+  }
+});
+
 
 app.get('/', (req, res) => {
     res.send('API is running'); 
@@ -42,7 +48,7 @@ const codeBlocks = [
         name: 'Loops',
         description: 'Use a loop to print the numbers from 1 to 5 to the console.',
         code: '',
-        solution: '1',
+        solution: 'for (let i = 1; i <= 5; i++) {console.log(i);}',
     },
 ];
 
