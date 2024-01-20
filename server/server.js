@@ -8,13 +8,7 @@ const { MongoClient } = require('mongodb');
 app.use(cors());
 
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: 'https://collabcodehub.vercel.app/',
-    methods: ['GET', 'POST']
-  }
-});
-
+const io = new Server(server, { cors: { origin: '*' } });
 
 app.get('/', (req, res) => {
     res.send('API is running'); 
