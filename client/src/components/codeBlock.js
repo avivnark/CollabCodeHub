@@ -65,7 +65,7 @@ function CodeBlock() {
         };
     }, [id]);
 
-
+// Goes to Mentor/Student according to the cookie
     return (
         <div className="CodeBlock">
             <h1>Code Block {selectedCodeBlock.name}</h1>

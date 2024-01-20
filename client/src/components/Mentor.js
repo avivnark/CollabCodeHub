@@ -23,7 +23,7 @@ function Mentor({ socket, id }) {
     };
   }, [socket, id]);
 
-
+// Hilighting Mentor code using SyntaxHighlighter
   return (
     <SyntaxHighlighter language="javascript" style={atomOneDark}>
       {codeReceived}

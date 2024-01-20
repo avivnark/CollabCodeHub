@@ -11,9 +11,10 @@ const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
 app.get('/', (req, res) => {
-    res.send('API is running'); // You can customize this response
+    res.send('API is running'); 
 });
 
+// Define an array of code blocks with their respective information
 const codeBlocks = [
     {
         id: 1,
@@ -45,9 +46,9 @@ const codeBlocks = [
     },
 ];
 
+// Flag to determine if a user has ever connected
+// Used to set up a cookie on the client side
 let isMentor = {};
-
-// MongoDB connection URI
 const mongoURI = "mongodb+srv://avivn14:96UQIMIl23v5T0Tx@collabcodehub.ioxvtqd.mongodb.net/?retryWrites=true&w=majority"
 
 // Connect to MongoDB
@@ -78,8 +79,11 @@ async function connectToMongoDB() {
     }
 }
 
+// Function to connect to MongoDB and initialize the 'codeblocks' collection
 
 connectToMongoDB();
+
+// Socket.io event handling for user connections
 
 io.on("connection", (socket) => {
     socket.on('userConnected', () => {
