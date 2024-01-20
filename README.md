@@ -14,6 +14,4 @@ The Code Block page is where users collaborate on coding tasks. It distinguishes
 
 ## Render Link
 
-https://collabcodehub.onrender.com
-
-
+https://collabcodehub.vercel.app/
