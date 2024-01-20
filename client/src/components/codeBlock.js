@@ -7,7 +7,7 @@ import Mentor from './Mentor';
 import Student from './Student';
 
 
-const socket = io.connect('http://localhost:3001');
+const socket = io.connect('https://collabcodehubserver.onrender.com/');
 
 function CodeBlock() {
     const { id } = useParams();
